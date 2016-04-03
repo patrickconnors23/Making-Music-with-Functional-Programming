@@ -6,7 +6,7 @@
 			    Part 2: Music
  **********************************************************************)
 
-exception InvalidHex
+exception InvalidHex 
 exception InvalidPitch
 
 (***** Type definitions *****)
