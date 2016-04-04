@@ -13,7 +13,11 @@ type 'a mlist = Nil | Cons of 'a * 'a mlist ref
    a cycle.  You may want a recursive helper function. Don't worry
    about space usage. *)
 let has_cycle (lst : 'a mlist) : bool =
-  failwith "has_cycle not implemented"
+  let is_traversed (nd1 : 'a) (nd2 : 'a) : bool =
+    if (!nd1) == b then true else false
+  in
+;;
+
 
 (* Write a function flatten that flattens a list (removes its cycles
    if it has any) destructively. Again, you may want a recursive
