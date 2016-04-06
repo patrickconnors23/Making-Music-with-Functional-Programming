@@ -36,50 +36,17 @@ let has_cycle (lst : 'a mlist) : bool =
 (* Write a function flatten that flattens a list (removes its cycles
    if it has any) destructively. Again, you may want a recursive
    helper function and you shouldn't worry about space. *)
-let flatten (lst : 'a mlist) : unit =
-  let is_traversed (nd1 : 'a) (nd2 : 'a) : bool =
-    if (nd1) == nd2 then true else false
-  in
-  let rec check (nd3: 'a) (lst: 'a mlist) : bool =
-    match lst with
-    | Nil -> false
-    | Cons(c,n) ->
-      if is_traversed nd3 c then true
-      else check nd3 !n
-  in
-  let rec iter (lst: 'a mlist) : unit =
-    match lst with
-    | Nil -> ()
-    | Cons(c,n) -> 
-      if (check c !n) then n:=Nil
-      else iter !n
-  in iter lst
-;;
+(* let flatten (lst : 'a mlist) : unit =
+  if has_cycle lst then
+
+  else () *)
 
 (* Write mlength, which nondestructively finds the number of nodes in
    a mutable list that may have cycles. *)
 let mlength (lst : 'a mlist) : int =
-  let counter = 0 in
-  let is_traversed (nd1 : 'a) (nd2 : 'a) : bool =
-    if (nd1) == nd2 then true else false
-  in
-  let rec check (nd3: 'a) (lst: 'a mlist) : bool =
-    match lst with
-    | Nil -> false
-    | Cons(c,n) ->
-      if is_traversed nd3 c then true
-      else check nd3 !n
-  in
-  let rec len (lst: 'a mlist) (counter: int) : int =
-    match lst with
-    | Nil -> counter
-    | Cons(c,n) -> 
-      if (check c !n) then counter
-      else len (!n) (counter+1)
-  in len lst counter
-;;
+  failwith "mlength not implemented"
 
 (* Please give us an honest estimate of how long this part took you to
    complete.  We care about your responses and will use them to help
    guide us in creating future assignments. *)
-let minutes_spent : int = 30
+let minutes_spent : int = -1
