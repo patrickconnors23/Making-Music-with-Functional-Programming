@@ -1,12 +1,8 @@
 ### Starting build.
-# Target: refs_test.ml.depends, tags: { extension:ml, file:refs_test.ml, ocaml, ocamldep, quiet, strict-sequence, thread, traverse, use_str, use_unix, warn(A-4-33-40-41-42-43-34-44) }
-/Users/patrickconnors/.ocamlbrew/ocaml-4.02.2/bin/ocamldep.opt -modules refs_test.ml > refs_test.ml.depends
 # Target: refs.ml.depends, tags: { extension:ml, file:refs.ml, ocaml, ocamldep, quiet, strict-sequence, thread, traverse, use_str, use_unix, warn(A-4-33-40-41-42-43-34-44) }
 /Users/patrickconnors/.ocamlbrew/ocaml-4.02.2/bin/ocamldep.opt -modules refs.ml > refs.ml.depends # cached
 # Target: refs.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:refs.cmo, file:refs.ml, implem, ocaml, quiet, strict-sequence, thread, traverse, use_str, use_unix, warn(A-4-33-40-41-42-43-34-44) }
 /Users/patrickconnors/.ocamlbrew/ocaml-4.02.2/bin/ocamlc.opt -c -thread -strict-sequence -w A-4-33-40-41-42-43-34-44 -o refs.cmo refs.ml # cached
-# Target: refs_test.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:refs_test.cmo, file:refs_test.ml, implem, ocaml, quiet, strict-sequence, thread, traverse, use_str, use_unix, warn(A-4-33-40-41-42-43-34-44) }
-/Users/patrickconnors/.ocamlbrew/ocaml-4.02.2/bin/ocamlc.opt -c -thread -strict-sequence -w A-4-33-40-41-42-43-34-44 -o refs_test.cmo refs_test.ml
-# Target: refs_test.byte, tags: { byte, dont_link_with, extension:byte, file:refs_test.byte, link, ocaml, program, quiet, strict-sequence, thread, traverse, use_str, use_unix, warn(A-4-33-40-41-42-43-34-44) }
-/Users/patrickconnors/.ocamlbrew/ocaml-4.02.2/bin/ocamlc.opt unix.cma str.cma -thread threads.cma refs.cmo refs_test.cmo -o refs_test.byte
+# Target: refs.byte, tags: { byte, dont_link_with, extension:byte, file:refs.byte, link, ocaml, program, quiet, strict-sequence, thread, traverse, use_str, use_unix, warn(A-4-33-40-41-42-43-34-44) }
+/Users/patrickconnors/.ocamlbrew/ocaml-4.02.2/bin/ocamlc.opt unix.cma str.cma -thread threads.cma refs.cmo -o refs.byte
 # Compilation successful.
