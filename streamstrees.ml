@@ -41,7 +41,7 @@ the input stream. For example:
    - : float list = [0.5; 1.5; 2.5; 3.5; 4.5]
  *)
 let average (s : float stream) : float stream =
-  failwith "average not implemented" ;;
+  smap2 (fun x y -> (x +. y) /. 2.) s (tail s);;
 
 (* Now instead of using the stream of approximations in pi_sums, you
 can instead use the stream of averaged pi_sums, which converges much
@@ -54,7 +54,12 @@ writeup. Write a function to apply this accelerator to a stream, and
 use it to generate approximations of pi. *)
 
 let aitken (s: float stream) : float stream =
-  failwith "aitken not implemented" ;;
+  let square x = x *. x in
+  let denom_1 = smap2 (-.) (tail (tail s)) (smap (( *.)2.) (tail s))  in
+  let denom_seq = smap2 (+.) denom_1 s in
+  let num_seq = smap (square) (smap2 (-.) (tail (tail s)) (tail s)) in
+  let proportion = smap2 (/.) num_seq denom_seq in
+  smap2 (-.) s proportion;;
 
 (* Fill out the following table, recording how many steps are need to
 get within different epsilons of pi.

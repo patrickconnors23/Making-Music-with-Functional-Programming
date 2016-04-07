@@ -13,8 +13,8 @@ type 'a mlist = Nil | Cons of 'a * 'a mlist ref
    a cycle.  You may want a recursive helper function. Don't worry
    about space usage. *)
 let has_cycle (lst : 'a mlist) : bool =
-  let is_traversed (nd1 : 'a) (nd2 : 'a list) : bool =
-    if List.memq nd1 nd2 then true else false
+  let is_traversed (nd1 : 'a) (lst : 'a list) : bool =
+    if List.memq nd1 lst then true else false
   in
   let rec iter (lst: 'a mlist) (lst_build : 'a list) : bool =
     match lst with
