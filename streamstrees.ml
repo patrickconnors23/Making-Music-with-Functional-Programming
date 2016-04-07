@@ -95,7 +95,7 @@ exception Finite_tree ;;
 let node (t : 'a tree) : 'a =
   match Lazy.force t with
   | Node(h,t1) -> h
-  ;;
+;;
 
 (* Returns the list of children of the root node of a tree of type 'a
    tree. *)
@@ -108,7 +108,7 @@ let children (t : 'a tree) : 'a tree list =
    indented indent spaces. You can see some examples of the intended
    output of print_depth below. *)
 let rec print_depth (n: int) (indent: int) (t: 'a tree) : unit =
-  if n = 0 then ()
+  if n < 0 then ()
   else
     match Lazy.force t with
     | Node(head,tree_list) ->
@@ -139,17 +139,16 @@ let rec tmap2 (f: 'a -> 'b -> 'c) (t1: 'a tree) (t2: 'b tree) : 'c tree =
    is an example of bfenumerate being applied below. *)
 
 (*NativeLazyStreams.*)
-let rec bfenumerate (tslist : 'a tree list) : 'a stream =
+let rec bfenumerate (tslist : 'a tree list) : 'a str =
   match tslist with
-  | [] -> []
   | h::t ->
-    Cons(Cons(node h,bfenumerate t), bfenumerate children h)
+    Cons ((Cons(node h, bfenumerate children h)), bfnumerate t)
 ;;
 
 (* Now use your implementation to generate some interesting infinite trees. *)
     
 (* Define an infinite binary tree all of whose nodes hold the integer 1. *)
-let rec onest :int tree = lazy (failwith "onest not implemented") ;;
+let rec onest :int tree = lazy (Node(1,[onest;onest]));;
 
 (* Define a function levels that returns an infinite binary tree
    where the value of each node in the tree is its level or depth in
@@ -165,7 +164,7 @@ let rec onest :int tree = lazy (failwith "onest not implemented") ;;
       2...
     - : unit = ()
  *)
-let rec levels (n: int) : int tree = failwith "levels not implemented" ;;
+let rec levels (n: int) : int tree = lazy (Node(n,[levels (n+1);levels (n+1)]));;
 
 (* Define an infinite binary tree nats where the value of each node in
    the tree is consecutively numbered in breadth-first order starting
@@ -183,7 +182,8 @@ let rec levels (n: int) : int tree = failwith "levels not implemented" ;;
     # first 10 (bfenumerate [nats]) ;;
     - : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
  *)
-let rec nats : int tree = lazy (failwith "nats not implemented") ;;
+let rec nats : int tree = 
+  lazy (Node(n,[levels (n+1);levels (n+2)]) ;;
 
 (*---------------------------------------------------------------------
 Time estimate 
