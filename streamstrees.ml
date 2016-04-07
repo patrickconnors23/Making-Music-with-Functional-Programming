@@ -16,6 +16,7 @@ a Taylor series. In the next problem, you'll use streams to find
 faster approximations for pi. *)
 
 open NativeLazyStreams ;;
+open Printf ;;
 
 (* Recall from lecture the use of streams to generate approximations
 of pi of whatever accuracy. Try it. You should be able to reproduce
@@ -55,11 +56,11 @@ use it to generate approximations of pi. *)
 
 let aitken (s: float stream) : float stream =
   let square x = x *. x in
-  let denom_1 = smap2 (-.) (tail (tail s)) (smap (( *.)2.) (tail s))  in
-  let denom_seq = smap2 (+.) denom_1 s in
-  let num_seq = smap (square) (smap2 (-.) (tail (tail s)) (tail s)) in
-  let proportion = smap2 (/.) num_seq denom_seq in
-  smap2 (-.) s proportion;;
+  let denom_1 = smap2 (-.) (tail (tail s)) (smap (( *.)2.) (tail s))  in
+  let denom_seq = smap2 (+.) denom_1 s in
+  let num_seq = smap (square) (smap2 (-.) (tail (tail s)) (tail s)) in
+  let proportion = smap2 (/.) num_seq denom_seq in
+  smap2 (-.) s proportion;;
 
 (* Fill out the following table, recording how many steps are need to
 get within different epsilons of pi.
@@ -92,36 +93,58 @@ exception Finite_tree ;;
 (* Returns the element of type 'a stored at the root node of tree t of
    type 'a tree. *)
 let node (t : 'a tree) : 'a =
-  failwith "node not implemented" ;;
+  match Lazy.force t with
+  | Node(h,t1) -> h
+  ;;
 
 (* Returns the list of children of the root node of a tree of type 'a
    tree. *)
 let children (t : 'a tree) : 'a tree list =
-  failwith "children not implemented" ;;
+  match Lazy.force t with
+  | Node(h,t1) -> t1
+;;
   
 (* Prints a representation of the first n levels of the tree t
    indented indent spaces. You can see some examples of the intended
    output of print_depth below. *)
 let rec print_depth (n: int) (indent: int) (t: 'a tree) : unit =
-  failwith "print_depth not implemented" ;;
+  if n = 0 then ()
+  else
+    match Lazy.force t with
+    | Node(head,tree_list) ->
+      let rec num_space (n:int) (s:string)=
+        if n = 0 then s
+        else num_space (n-1) (s^(" "))
+      in 
+      print_string ((num_space indent "")^(string_of_int head)^"\n");
+      List.iter (fun x -> print_depth (n-1) (indent+1) x) tree_list
+;;
   
 (* Returns a tree obtained by mapping the function f over each node in
    t. *)
 let rec tmap (f: 'a -> 'b) (t: 'a tree) : 'b tree =
-  failwith "tmap not implemented" ;;
+  lazy (Node(f (node t), List.map (fun x -> tmap f x) (children t)))
+;;
   
 (* Returns the tree obtained by applying the function f to
    corresponding nodes in t1 and t2, which must have the same
    "shape". If they don't an Invalid_argument exception is raised. *)
 let rec tmap2 (f: 'a -> 'b -> 'c) (t1: 'a tree) (t2: 'b tree) : 'c tree =
-  failwith "tmap2 not implemented" ;;
+  lazy (Node(f (node t1) (node t2), List.map2 (fun x y -> tmap2 f x y) (children t1) (children t2)))
+;;
   
 (* Returns a LazyStreams.stream of the nodes in the list of trees
    tslist enumerated in breadth first order, that is, the root nodes
    of each of the trees, then the level onenodes, and so forth. There
    is an example of bfenumerate being applied below. *)
-let rec bfenumerate (tslist : 'a tree list) : 'a NativeLazyStreams.stream =
-  failwith "bfenumerate not implemented";;
+
+(*NativeLazyStreams.*)
+let rec bfenumerate (tslist : 'a tree list) : 'a stream =
+  match tslist with
+  | [] -> []
+  | h::t ->
+    Cons(Cons(node h,bfenumerate t), bfenumerate children h)
+;;
 
 (* Now use your implementation to generate some interesting infinite trees. *)
     
