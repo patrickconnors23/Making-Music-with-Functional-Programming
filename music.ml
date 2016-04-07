@@ -141,6 +141,7 @@ let shift_start (by : float) (str : event stream) =
 (* type event = Tone of float * pitch * int | Stop of float * pitch
 
 type obj = Note of pitch * float * int | Rest of float *)
+(Cons(Stop(duration1,pitch1),list_to_stream_rec t))
 
 let rec list_to_stream (lst : obj list) : event stream =
   let rec list_to_stream_rec nlst =
@@ -149,9 +150,9 @@ let rec list_to_stream (lst : obj list) : event stream =
     | h::t -> 
       match h with
       | Note(pitch1,duration1,volume1) -> 
-        fun () -> Cons(Tone(0.,pitch1,volume1), (Cons(Stop(duration1,pitch1),list_to_stream_rec t))) 
+        fun () -> Cons(Tone(0.,pitch1,volume1), fun () -> (Cons(Stop(duration1,pitch1),list_to_stream_rec t))) 
       | Rest(duration1) -> 
-        fun () -> Cons(Tone(0.,0,0), (Cons(Stop(duration1,pitch1),list_to_stream_rec t)))
+        fun () -> Cons(Tone(0.,(A,0),0), fun () -> (Cons(Stop(duration1,pitch1),list_to_stream_rec t)))
   in list_to_stream_rec lst
 ;;
 
