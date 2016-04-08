@@ -133,8 +133,7 @@ let rec tmap (f: 'a -> 'b) (t: 'a tree) : 'b tree =
    corresponding nodes in t1 and t2, which must have the same
    "shape". If they don't an Invalid_argument exception is raised. *)
 let rec tmap2 (f: 'a -> 'b -> 'c) (t1: 'a tree) (t2: 'b tree) : 'c tree =
-  lazy (Node(f (node t1) (node t2), List.map2 
-    (fun x y -> tmap2 f x y) (children t1) (children t2)))
+  lazy (Node(f (node t1) (node t2), List.map2 (fun x y -> tmap2 f x y) (children t1) (children t2)))
 ;;
   
 (* Returns a LazyStreams.stream of the nodes in the list of trees
@@ -174,8 +173,7 @@ let rec onest :int tree = lazy (Node(1,[onest;onest]));;
       2...
     - : unit = ()
  *)
-let rec levels (n: int) : int tree = 
-  lazy (Node(n,[levels (n+1);levels (n+1)]));;
+let rec levels (n: int) : int tree = lazy (Node(n,[levels (n+1);levels (n+1)]));;
 
 (* Define an infinite binary tree nats where the value of each node in
    the tree is consecutively numbered in breadth-first order starting

@@ -23,4 +23,17 @@ let test_has_cycle =
 	assert(not(has_cycle list1a));
 	assert(has_cycle(!reflist));;
 
+let test_flatten = 
+	assert(flatten list1a; list1a = Cons(2,{contents = Nil}));
+	assert(flatten list2; list2 
+		= Cons(1,{contents = Cons(2,{contents = Nil})}));;
+
+let test_mlength =
+	assert(mlength list1a = 1);
+	assert(mlength list1b = 2);
+	assert(mlength list1 = 3);
+	assert(mlength list2 = 2);;
+
 test_has_cycle;;
+test_flatten;;
+test_mlength;;

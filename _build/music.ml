@@ -145,20 +145,13 @@ type obj = Note of pitch * float * int | Rest of float *)
 let rec list_to_stream (lst : obj list) : event stream =
   let rec list_to_stream_rec nlst =
     match nlst with
-    (* when reach end of list call the function again to keep going forever *)
     | [] -> list_to_stream lst
     | h::t -> 
       match h with
-      (* pull out relevant info from pitch *)
       | Note(pitch1,duration1,volume1) -> 
-        (* add even to stream and cons with stop and recursive call*)
-        fun () -> Cons(Tone(0.,pitch1,volume1), 
-          fun () -> (Cons(Stop(duration1,pitch1),list_to_stream_rec t))) 
+        fun () -> Cons(Tone(0.,pitch1,volume1), fun () -> (Cons(Stop(duration1,pitch1),list_to_stream_rec t))) 
       | Rest(duration1) -> 
-        (* do the same witha rest but don't worry about volume *)
-        fun () -> Cons(Tone(0.,(A,0),0), 
-          fun () -> (Cons(Stop(duration1,(A,0)),list_to_stream_rec t)))
-  (* call helper function on lst *)
+        fun () -> Cons(Tone(0.,(A,0),0), fun () -> (Cons(Stop(duration1,(A,0)),list_to_stream_rec t)))
   in list_to_stream_rec lst
 ;;
 
@@ -173,13 +166,8 @@ let time_of_event (e : event) : float =
 let rec pair (a : event stream) (b : event stream) : event stream =
   match a(),b() with
   | Cons(a1,a2),Cons(b1,b2) ->
-    (* get times from events in stream *) 
     let timea = time_of_event a1 in
     let timeb = time_of_event b1 in
-    (* check which event happens first; then add that event to stream;
-        then shift start time of other event;
-        then call the function again and cons this on to the rest
-        of the list *)
     if timea < timeb then fun () -> Cons(a1,pair (shift_start (-.timea) b) a2)
     else fun () -> Cons(b1, pair (shift_start (-.timeb) a) b2)
 ;; 
@@ -201,13 +189,10 @@ let transpose (str : event stream) (half_steps : int) : event stream =
     match str() with
     | Cons(head,tail) ->
       match head with
-      (* get pitch info *)
-      | Tone(d,p,v) ->
-        (* adjust the pitch and then add it to stream *) 
+      | Tone(d,p,v) -> 
         let p_new = transpose_pitch p half_steps in
         fun () -> Cons(Tone(d,p_new,v),transpose_rec tail)
       | Stop(d,p) ->
-        (* add stop to stream *)
         let p_new = transpose_pitch p half_steps in
         fun () -> Cons(Stop(d,p_new),transpose_rec tail)
   in transpose_rec str
@@ -265,10 +250,8 @@ let melody = list_to_stream ((List.map quarter slow) @
  * bass and melody. Uncomment the definitions above and the lines below when
  * you're done. Run the program to hear the beautiful music. *)
 
-(* conintually add each iteration of melody, shifted accordingly, to the bass *)
 let canon =
-  pair (pair (pair bass (shift_start 2. melody)) 
-    (shift_start 4. melody)) (shift_start 6. melody)
+  pair (pair (pair bass (shift_start 2. melody)) (shift_start 4. melody)) (shift_start 6. melody)
 ;;
 
 output_midi "canon.mid" 176 canon;;
